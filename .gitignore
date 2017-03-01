@@ -1,0 +1,18 @@
+### Ant ###
+lib/
+build/
+TEST-RESULT/
+javadoc/
+
+### Intellij ###
+.idea/
+.idea_modules/
+out/
+*.iml
+
+
+### Java ###
+*.class
+
+### Other ###
+*.log*
