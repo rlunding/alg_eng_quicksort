@@ -73,7 +73,7 @@
     </target>
 
     <!-- Compilation tasks --> <!-- TODO: depends="prepare,resolve", resolve is removed to speed up things-->
-    <target name="build.src" depends="prepare"
+    <target name="build.src" depends="prepare,resolve"
             description="--> Compile production code source files">
         <javac srcdir="${src.dir}"
                destdir="${build.dir}"
