@@ -36,7 +36,7 @@ public class QuickDualPivot {
 
         int lt = left + 1, gt = right - 1;
         int i = left + 1;
-        while (i < gt) {
+        while (i <= gt) {
             if (input[i] < input[left]) swap(input, lt++, i++);
             else if (input[right] < input[i]) swap(input, i, gt--);
             else i++;

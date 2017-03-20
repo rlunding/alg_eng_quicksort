@@ -12,20 +12,29 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-@Warmup(iterations = 20, time = 100, timeUnit = TimeUnit.MILLISECONDS)
-@Measurement(iterations = 40, time = 100, timeUnit = TimeUnit.MILLISECONDS)
+@Warmup(iterations = 10, time = 100, timeUnit = TimeUnit.MILLISECONDS)
+@Measurement(iterations = 10, time = 100, timeUnit = TimeUnit.MILLISECONDS)
 @Fork(1)
 @State(Scope.Thread)
 public class BenchLowInput {
 
-    @Param({"5", "10", "15", "20", "25", "30", "40", "50", "60", "70", "80", "90", "100", "120", "140", "160", "180", "200", "250", "300", "350", "400", "450", "500"})
+    //@Param({"5", "10", "15", "20", "25", "30", "40", "50", "60", "70", "80", "90", "100", "120", "140", "160", "180", "200", "250", "300", "350", "400", "450", "500"})
+    @Param({"600", "700", "800", "900", "1000", "1250", "1500", "1750", "2000", "2500", "3000"})
     private int elements;
+
+    @Param({"true", "false"})
+    private boolean completelyRandom;
+
     private int numbers[];
 
 
     @Setup(Level.Invocation)
     public void prepare() {
-        numbers = DataGenerator.generateRandomNumbers(elements);
+        if (completelyRandom) {
+            numbers = DataGenerator.generateRandomNumbers(elements);
+        } else {
+            numbers = DataGenerator.generateAlmostSortedNumbers(elements);
+        }
     }
 
     @Benchmark
@@ -45,17 +54,4 @@ public class BenchLowInput {
         (new Mergesort(0)).sort(numbers);
         blackhole.consume(numbers);
     }
-
-    @Benchmark
-    public void JRE(Blackhole blackhole) {
-        (new JRE(10, 0, 2)).sort(numbers);
-        blackhole.consume(numbers);
-    }
-
-    @Benchmark
-    public void skewedQuicksort(Blackhole blackhole) {
-        (new SkewedPivotQuicksort(10, 1)).sort(numbers);
-        blackhole.consume(numbers);
-    }
-
 }

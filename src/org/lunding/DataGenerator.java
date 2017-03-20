@@ -19,7 +19,7 @@ public class DataGenerator {
     }
 
     public static int[] generateAlmostSortedNumbers(int size) {
-        int bound = 100;
+        int bound = (int) (size*0.20f);
         return generateAlmostSortedNumbers(size, bound);
     }
 

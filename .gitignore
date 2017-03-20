@@ -3,6 +3,7 @@ lib/
 build/
 TEST-RESULT/
 javadoc/
+dist/
 
 ### Intellij ###
 .idea/
@@ -16,3 +17,6 @@ out/
 
 ### Other ###
 *.log*
+data/
+data_backup/
+keep/

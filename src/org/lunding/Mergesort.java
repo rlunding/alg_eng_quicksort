@@ -1,6 +1,7 @@
 package org.lunding;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  *  http://algs4.cs.princeton.edu/22mergesort/MergeX.java.html
@@ -9,9 +10,11 @@ import java.util.Arrays;
 public class Mergesort {
 
     private int QUICKSORT_CUTOFF;
+    private QuickDualPivot quickDualPivot;
 
     public Mergesort(int QUICKSORT_CUTOFF) {
         this.QUICKSORT_CUTOFF = QUICKSORT_CUTOFF;
+        this.quickDualPivot = new QuickDualPivot(50);
     }
 
     public void sort(int[] input) {
@@ -24,20 +27,20 @@ public class Mergesort {
 
     private void mergesort(int[] helper, int[] input, int left, int right) {
         if (right <= left + QUICKSORT_CUTOFF) {
-            //InsertionSort.optimizedSort(input, left, right);
-            Arrays.sort(input, left, right);
+            //quickDualPivot.sort(input, left, right);
+            InsertionSort.optimizedSort(input, left, right);
+            return;
         }
 
-        if (left < right) {
-            int middle = (left + right) >>> 1;
-            mergesort(helper, input, left, middle);
-            mergesort(helper, input, middle+1, right);
-            if (input[middle] <= input[middle+1]) {
-                System.arraycopy(helper, left, input, left, right-left+1);
-                return;
-            }
-            merge(helper, input, left, middle, right);
+        int middle = left + (right - left) / 2;//(left + right) >>> 1;
+        mergesort(input, helper, left, middle);
+        mergesort(input, helper, middle+1, right);
+        if (!(helper[middle+1] < helper[middle])) {
+            System.arraycopy(helper, left, input, left, right-left+1);
+            return;
         }
+        merge(helper, input, left, middle, right);
+
     }
 
     private void merge(int[] helper, int input[], int left, int middle, int right) {

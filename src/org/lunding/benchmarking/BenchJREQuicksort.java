@@ -13,128 +13,81 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 250, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 250, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
+@State(Scope.Thread)
 public class BenchJREQuicksort {
 
-    @State(Scope.Thread)
-    public static class NumberState {
-        int numbers[];
+    @Param({"4000000"})
+    private int elements;
 
-        @Setup(Level.Invocation)
-        public void prepare() {
-            numbers = DataGenerator.generateRandomNumbers(2000000);
+    @Param({"10"})
+    private int INSERTION_SORT_CUTOFF;
+
+    @Param({"true", "false"})
+    private boolean completelyRandom;
+
+    private int numbers[];
+
+    @Setup(Level.Invocation)
+    public void prepare() {
+        if (completelyRandom) {
+            numbers = DataGenerator.generateRandomNumbers(elements);
+        } else {
+            numbers = DataGenerator.generateAlmostSortedNumbers(elements);
         }
     }
 
     @Benchmark
-    public void simpleQuicksort20_1_2(NumberState state, Blackhole blackhole) {
-        (new JRE(20, 0, 1)).sort(state.numbers);
-        blackhole.consume(state.numbers);
+    public void simpleQuicksort_1_2(Blackhole blackhole) {
+        (new JRE(INSERTION_SORT_CUTOFF, 0, 1)).sort(numbers);
+        blackhole.consume(numbers);
+    }
+
+
+    @Benchmark
+    public void simpleQuicksort_1_3(Blackhole blackhole) {
+        (new JRE(INSERTION_SORT_CUTOFF, 0, 2)).sort(numbers);
+        blackhole.consume(numbers);
+    }
+
+
+    @Benchmark
+    public void simpleQuicksort_1_4(Blackhole blackhole) {
+        (new JRE(INSERTION_SORT_CUTOFF, 0, 3)).sort(numbers);
+        blackhole.consume(numbers);
+    }
+
+
+    @Benchmark
+    public void simpleQuicksort_2_3(Blackhole blackhole) {
+        (new JRE(INSERTION_SORT_CUTOFF, 1, 2)).sort(numbers);
+        blackhole.consume(numbers);
+    }
+
+
+    @Benchmark
+    public void simpleQuicksort_2_4(Blackhole blackhole) {
+        (new JRE(INSERTION_SORT_CUTOFF, 1, 3)).sort(numbers);
+        blackhole.consume(numbers);
     }
 
     @Benchmark
-    public void simpleQuicksort40_1_2(NumberState state, Blackhole blackhole) {
-        (new JRE(40, 0, 1)).sort(state.numbers);
-        blackhole.consume(state.numbers);
+    public void simpleQuicksort_2_5(Blackhole blackhole) {
+        (new JRE(INSERTION_SORT_CUTOFF, 1, 4)).sort(numbers);
+        blackhole.consume(numbers);
     }
 
     @Benchmark
-    public void simpleQuicksort60_1_2(NumberState state, Blackhole blackhole) {
-        (new JRE(60, 0, 1)).sort(state.numbers);
-        blackhole.consume(state.numbers);
+    public void simpleQuicksort_3_4(Blackhole blackhole) {
+        (new JRE(INSERTION_SORT_CUTOFF, 2, 3)).sort(numbers);
+        blackhole.consume(numbers);
     }
 
     @Benchmark
-    public void simpleQuicksort20_1_3(NumberState state, Blackhole blackhole) {
-        (new JRE(20, 0, 2)).sort(state.numbers);
-        blackhole.consume(state.numbers);
+    public void simpleQuicksort_3_5(Blackhole blackhole) {
+        (new JRE(INSERTION_SORT_CUTOFF, 2, 4)).sort(numbers);
+        blackhole.consume(numbers);
     }
-
-    @Benchmark
-    public void simpleQuicksort40_1_3(NumberState state, Blackhole blackhole) {
-        (new JRE(40, 0, 2)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort60_1_3(NumberState state, Blackhole blackhole) {
-        (new JRE(60, 0, 2)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort20_1_4(NumberState state, Blackhole blackhole) {
-        (new JRE(20, 0, 3)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort40_1_4(NumberState state, Blackhole blackhole) {
-        (new JRE(40, 0, 3)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort60_1_4(NumberState state, Blackhole blackhole) {
-        (new JRE(60, 0, 3)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort20_2_3(NumberState state, Blackhole blackhole) {
-        (new JRE(20, 1, 2)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort40_2_3(NumberState state, Blackhole blackhole) {
-        (new JRE(40, 1, 2)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort60_2_3(NumberState state, Blackhole blackhole) {
-        (new JRE(60, 1, 2)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort20_2_4(NumberState state, Blackhole blackhole) {
-        (new JRE(20, 1, 3)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort40_2_4(NumberState state, Blackhole blackhole) {
-        (new JRE(40, 1, 3)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort60_2_4(NumberState state, Blackhole blackhole) {
-        (new JRE(60, 1, 3)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort20_3_5(NumberState state, Blackhole blackhole) {
-        (new JRE(20, 2, 4)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort40_3_5(NumberState state, Blackhole blackhole) {
-        (new JRE(40, 2, 4)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-    @Benchmark
-    public void simpleQuicksort60_3_5(NumberState state, Blackhole blackhole) {
-        (new JRE(60, 2, 4)).sort(state.numbers);
-        blackhole.consume(state.numbers);
-    }
-
-
 }

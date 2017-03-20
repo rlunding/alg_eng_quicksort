@@ -5,19 +5,23 @@
 
     <target name="help">
         <echo>
-            Algorithm Engineering project
-            Improving Quicksort in Java
+        Algorithm Engineering project
+        Improving Quicksort in Java
 
-            clean:      Remove all intermediate files and folders
-            test:       Run JUnit test cases
+        clean:      Remove all intermediate files and folders
+        test:       Run JUnit test cases
+        javadoc:    Generate javadoc for production code
+        resolve:    Download all dependencies
 
-            javadoc:    Generate javadoc for production code
-
-            Execution targets
-            bench1:     ...
-            bench2:     ...
-
-            MORE INFO
+        ### Execution targets ###
+        bench.insertion:    Benchmark the insertion sort implementations
+        bench.simple:       Benchmark the simple implementation of Quicksort
+        bench.skewed:       Benchmark the skewed implementation of Quicksort
+        bench.jre:          Benchmark the JRE implementation from the article; Engineering Java 7's Dual Pivot Quicksort Using MaLiJAn
+        bench.dual:         Benchmark the dual pivot quicksort implementation
+        bench.merge:        Benchmark the mergesort implementation
+        bench.low:          Benchmark all algorithms with low size input
+        bench.best:         Benchmark all algorithms with their optimal parameters
         </echo>
     </target>
 
@@ -216,8 +220,15 @@
     <target name="bench.merge" depends="build.benchmark">
         <java jar="${dist.dir}/benchmarks.jar"
               fork="true">
-            <arg line=".BenchMergesort. -rf text -rff data/BenchMergesortQ.txt"/>
+            <arg line=".BenchMergesort. -rf text -rff data/BenchMergesort.txt"/>
         </java>
+    </target>
+
+    <target name="bench.night">
+        <ant target="bench.dual"/>
+        <ant target="bench.insertion"/>
+        <ant target="bench.jre"/>
+        <ant target="bench.low"/>
     </target>
 
 

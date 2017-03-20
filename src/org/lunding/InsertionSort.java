@@ -50,7 +50,7 @@ public class InsertionSort {
         int n = right + 1;
 
         int exchanges = 0;
-        for (int i = n - 1; i > left + 1; i--) {
+        for (int i = n - 1; i > left; i--) {
             if (input[i] < input[i - 1]) {
                 swap(input, i, i - 1);
                 exchanges++;
@@ -58,7 +58,7 @@ public class InsertionSort {
         }
         if (exchanges == 0) return;
 
-        for (int i = left + 3; i < n; i++) {
+        for (int i = left + 2; i < n; i++) {
             int v = input[i];
             int j = i;
             while (v < input[j - 1]) {
@@ -66,6 +66,26 @@ public class InsertionSort {
                 j--;
             }
             input[j] = v;
+        }
+    }
+
+    public static void javaSort(int[] input) {
+        if (input == null || input.length == 0) {
+            return;
+        }
+        javaSort(input, 0, input.length - 1);
+    }
+
+    public static void javaSort(int[] input, int left, int right) {
+        for (int i = left, j = i; i < right; j = ++i) {
+            int ai = input[i + 1];
+            while (ai < input[j]) {
+                input[j + 1] = input[j];
+                if (j-- == left) {
+                    break;
+                }
+            }
+            input[j + 1] = ai;
         }
     }
 
